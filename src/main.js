@@ -1,12 +1,20 @@
 import Vue from 'vue';
+import less from 'less';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import App from './App';
-import router from './router';
+import './assets/iconfont/iconfont.css';
+
+// import router from './router';
 
 Vue.config.productionTip = false;
+Vue.use(less);
+Vue.use(ElementUI);
+Vue.component(CollapseTransition.name, CollapseTransition);
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  router,
   render: h => h(App),
 });

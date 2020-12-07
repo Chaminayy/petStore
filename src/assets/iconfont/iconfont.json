@@ -1,0 +1,16 @@
+{
+  "id": "2253790",
+  "name": "petStoreIcon",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5194257",
+      "name": "宠物领养",
+      "font_class": "chongwulingyang",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}
