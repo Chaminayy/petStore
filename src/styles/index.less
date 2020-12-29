@@ -1,0 +1,50 @@
+@import './var.less';
+
+html {
+  height     : 100%;
+  width      : 100%;
+  color      : @color-main;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+body {
+  box-sizing        : border-box;
+  -webkit-box-sizing: border-box;
+  font-size         : @size-font-ees;
+  height            : 100%;
+  width             : 100%;
+  margin            : 0px;
+  padding           : 0px;
+  background-color  : #f7f7f7;
+  overflow-y        : auto;
+}
+
+ul {
+  margin : 0px;
+  padding: 0px;
+}
+
+ul li {
+  list-style: none;
+}
+
+a {
+  color          : @color-aux-impot;
+  text-decoration: none;
+  cursor         : pointer;
+}
+
+a:hover {
+  opacity: 0.8;
+  filter : Alpha(opacity=80)
+}
+
+span.import {
+  color: @color-aux-impot;
+}
+
+.clearfix:after {
+  content: "";
+  display: block;
+  clear  : both;
+}

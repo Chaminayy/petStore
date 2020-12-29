@@ -1,15 +1,18 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header>
-        <div class="nav">
-          <a class="titleIcon" href="javascript: alert('回到首页了')">
-          </a>
+    <div class="header-frame">
+      <div class="nav">
+        <div class="logo">
+          <a class="titleIcon" href="javascript: alert('回到首页了')" />
         </div>
-      </el-header>
-      <el-main>Main</el-main>
-    </el-container>
-    <h1>hahahhha</h1>
+        <div class="menu-list">
+          <ul>
+            <li>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -19,31 +22,42 @@ export default {
 };
 </script>
 
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  .el-header {
-    width: 100%;
-    height: 90px !important;
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-  }
-  .el-header .nav .titleIcon {
-    float: left;
-    margin-left: 30px;
-    height: 90px;
-    width: 95px;
-    background-image: url("./assets/images/titleIcon.png");
-    background-repeat: no-repeat;
-    background-size: 90px
-  }
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
+<style lang="less" scoped>
+  .header-frame {
+    display: block;
+    .nav {
+      width: 100%;
+      height: 60px;
+      background-color: #B3C0D1;
+      .logo {
+        float: left;
+        width: 130px;
+        font-size: 24px;
+        color: #fff;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        .titleIcon {
+          display: inline-block;
+          width: 60px;
+          height: 60px;
+          background: url("./assets/images/titleIcon.png");
+          background-size: 60px;
+        }
+      }
+      .menu-list {
+        ul {
+          li {
+            height: 57px;
+            line-height: 57px;
+            border-bottom: 3px solid #B3C0D1;
+            float: left;
+            width: 120px;
+            text-align: center;
+            cursor: pointer;
+          }
+        }
+      }
+    }
   }
 </style>

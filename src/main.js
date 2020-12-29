@@ -4,7 +4,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 import App from './App';
+
+import './styles/index.less';
 import './assets/iconfont/iconfont.css';
+
 
 // import router from './router';
 
