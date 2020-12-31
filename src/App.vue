@@ -34,23 +34,36 @@
             <div class="dropdown-content">
               <a class="me" href="javascript: alert('我的主页')">
                 <div class="user-wrapper">
-                  <p class="user-name">陈朝鸿</p>
-                  <p class="user-account">13428711862</p>
+                  <p class="user-name">{{userInfo.userName}}</p>
+                  <p class="user-account">{{userInfo.userPhone}}</p>
                 </div>
               </a>
               <ul class="dropdown-nav">
-                <li><a href="">我的主页</a></li>
-                <li><a href="">账号管理</a></li>
-                <li><a href="">福利中心</a></li>
+                <li v-for="(item, index) in dropdownNav" :key="index">
+                  <a href="">{{item}}</a>
+                </li>
               </ul>
               <ul class="dropdown-nav sign-out">
-                <li><a @click="isLogin = false">退出登录</a></li>
+                <li><a @click="logout">退出登录</a></li>
               </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <footer class="footer-frame clearfix">
+      <div class="bottom-layer-left">
+        <p class="lh"><a href="javascript:;">关于沃尔马宠物店</a></p>
+        <p class="lh"><a href="javascript:;">沃尔马宠物店营销</a></p>
+        <p class="lh"><a href="javascript:;">意见反馈</a></p>
+        <p class="lh"><a href="javascript:;">帮助中心</a></p>
+        <p class="lh"><a href="javascript: alert('想投诉？臭傻逼');">投诉我们</a></p>
+      </div>
+      <div class="bottom-layer-right">
+        <span class="lh">@2020&nbsp;Wal-Horse&nbsp;</span>
+        <span class="lh">(粤)-经营性-2020-0202</span>
+      </div>
+    </footer>
     <el-dialog
       class="dia_Action"
       width="20%"
@@ -101,7 +114,8 @@ export default {
       user: {
         phoneNumber: '',
         password: '',
-      }
+      },
+      userInfo: {}
     }
   },
   methods: {
@@ -121,15 +135,26 @@ export default {
       const res = await axios.post('http://localhost:3000/', {
         params
       })
+      console.log(res)
       if (res.data.code === 200) {
-        this.isLogin = true
+        this.userInfo = res.data.user
         this.$message.success(res.data.message)
+        this.isLogin = true
         this.loginShow = false
       } else {
         this.$message.error(res.data.message)
       }
     },
+    logout () {
+      this.isLogin = false;
+      this.userShowMore = false
+    }
   },
+  computed: {
+    dropdownNav () {
+      return ['我的主页', '账号管理', '福利中心']
+    }
+  }
 };
 </script>
 
@@ -139,7 +164,7 @@ export default {
     .nav {
       width: 100%;
       height: 60px;
-      background-color: #B3C0D1;
+      background: #E8E7E3;
       .logo {
         margin-left: 30px;
         float: left;
@@ -162,7 +187,6 @@ export default {
           li {
             height: 57px;
             line-height: 57px;
-            border-bottom: 3px solid #B3C0D1;
             float: left;
             width: 120px;
             text-align: center;
@@ -173,6 +197,9 @@ export default {
                 color: #415058;
               }
             }
+          }
+          li:hover {
+            border-bottom: 3px solid #B3C0D1;
           }
         }
       }
@@ -294,6 +321,48 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+  .footer-frame {
+    width: 100%;
+    min-width: 1250px;
+    position: fixed;
+    z-index: 302;
+    bottom: 0;
+    left: 0;
+    height: 40px;
+    overflow: hidden;
+    zoom: 1;
+    margin: 0;
+    background: #fbfbfb;
+    text-align: left;
+    line-height: 40px;
+    .bottom-layer-left {
+      float: left;
+      .lh {
+        display: inline;
+        margin-right: 20px;
+        a {
+          color: #9195a3;
+        }
+        a:hover {
+          color: #222;
+        }
+      }
+      .lh:first-child {
+        margin-left: 24px;
+      }
+    }
+    .bottom-layer-right {
+      float: right;
+      color: #bbb;
+      .lh {
+        display: inline;
+        margin-right: 20px;
+      }
+      .lh:last-child {
+        margin-right: 25px;
       }
     }
   }
