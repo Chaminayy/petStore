@@ -3,18 +3,18 @@
     <div class="header-frame clearfix">
       <div class="nav">
         <div class="logo">
-          <a class="titleIcon" href="javascript: alert('回到首页了')" />
+          <a class="titleIcon" @click="$goto('/index')"/>
         </div>
         <div class="list">
           <ul>
-            <li>
-              <span><a href="javascript: alert('宠物展示页面')">宠物展示</a></span>
+            <li @click="$goto('/show')">
+              <span><a>宠物展示</a></span>
             </li>
-            <li>
-              <span><a href="javascript: alert('关于我们页面')">关于我们</a></span>
+            <li @click="$goto('/about')">
+              <span><a>关于我们</a></span>
             </li>
-            <li v-show="isLogin">
-              <span><a href="javascript: alert('订单中心页面')">订单中心</a></span>
+            <li v-show="isLogin" @click="$goto('/order')">
+              <span><a>订单中心</a></span>
             </li>
           </ul>
         </div>
@@ -40,7 +40,7 @@
               </a>
               <ul class="dropdown-nav">
                 <li v-for="(item, index) in dropdownNav" :key="index">
-                  <a href="">{{item}}</a>
+                  <a href="javascript:alert('点我干嘛')">{{item}}</a>
                 </li>
               </ul>
               <ul class="dropdown-nav sign-out">
@@ -49,6 +49,11 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="content-frame clearfix">
+      <div class="content">
+        <router-view></router-view>
       </div>
     </div>
     <footer class="footer-frame clearfix">
@@ -87,7 +92,7 @@
       </div>
       <div class="loginBtn">
         <span slot="footer">
-          <el-button type="primary" @click="login">登 录</el-button>
+          <el-button type="primary" @click="loginChecked">登 录</el-button>
         </span>
       </div>
       <div class="footerFun">
@@ -103,9 +108,11 @@
 </template>
 
 <script>
-  import axios from 'axios';
+import path from './mixins/path';
+
 export default {
   name: 'App',
+  mixins: [path],
   data() {
     return {
       isLogin: false,
@@ -115,44 +122,73 @@ export default {
         phoneNumber: '',
         password: '',
       },
-      userInfo: {}
-    }
+      userInfo: {},
+    };
   },
   methods: {
-    async login() {
+    async loginChecked () {
       if (this.user.phoneNumber === '') {
-        this.$message.error('请输入您的账号')
-        return ''
+        this.$message.error('请输入您的账号');
+        return '';
       }
       if (this.user.password === '') {
-        this.$message.error('请输入您的密码')
-        return ''
+        this.$message.error('请输入您的密码');
+        return '';
       }
       const params = {
         phoneNumber: this.user.phoneNumber,
-        password: this.user.password
-      }
-      const res = await axios.post('http://localhost:3000/', {
-        params
-      })
-      console.log(res)
+        password: this.user.password,
+      };
+      this.login(params)
+    },
+    async login (params, hint = true) {
+      const res = await this.$axios.post('http://localhost:3000/', {
+        params,
+      });
       if (res.data.code === 200) {
-        this.userInfo = res.data.user
-        this.$message.success(res.data.message)
-        this.isLogin = true
-        this.loginShow = false
+        this.userInfo = res.data.user;
+        if (hint === true) {
+          this.$message.success(res.data.message);
+        }
+        this.isLogin = true;
+        this.loginShow = false;
+        console.log(params)
+        this.handleStorage('set', params)
       } else {
-        this.$message.error(res.data.message)
+        if (hint === true) {
+          this.$message.error(res.data.message);
+        }
       }
     },
     logout () {
       this.isLogin = false;
-      this.userShowMore = false
+      this.userShowMore = false;
+      this.$goto('/')
+      this.handleStorage('set')
+    },
+    handleStorage (type, params = { phoneNumber: null, password: null }) {
+      if (type === 'set') {
+        window.localStorage.setItem('phoneNumber', params.phoneNumber)
+        window.localStorage.setItem('password', params.password)
+        return '';
+      } else {
+        return {
+          phoneNumber: window.localStorage.getItem('phoneNumber'),
+          password: window.localStorage.getItem('password')
+        }
+      }
     }
   },
   computed: {
-    dropdownNav () {
-      return ['我的主页', '账号管理', '福利中心']
+    dropdownNav() {
+      return ['我的主页', '账号管理', '福利中心'];
+    },
+  },
+  async mounted() {
+    if (window.localStorage.getItem('phoneNumber') !== null && window.localStorage.getItem('password') !== null) {
+      const params = this.handleStorage('get')
+      console.log(params)
+      this.login(params, false)
     }
   }
 };
@@ -160,7 +196,12 @@ export default {
 
 <style lang="less" scoped>
   .header-frame {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
     display: block;
+    z-index: 1000;
     .nav {
       width: 100%;
       height: 60px;
@@ -322,6 +363,22 @@ export default {
           }
         }
       }
+    }
+  }
+  .content-frame {
+    position: relative;
+    float: inherit;
+    width: 100%;
+    height: 1000px;
+    margin: 0 auto;
+    padding: 65px 0 45px;
+    max-width: 1200px;
+    min-width: 768px;
+    .content {
+      border-radius: 5px;
+      width: 100%;
+      height: 100%;
+      background: #fff;
     }
   }
   .footer-frame {

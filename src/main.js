@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
+import echarts from 'echarts';
 import less from 'less';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -9,7 +10,10 @@ import App from './App';
 import './styles/index.less';
 import './assets/iconfont/iconfont.css';
 
-// import router from './router';
+import router from './router';
+
+Vue.prototype.$axios = axios
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false;
 Vue.use(less);
@@ -20,4 +24,5 @@ Vue.component(CollapseTransition.name, CollapseTransition);
 new Vue({
   el: '#app',
   render: h => h(App),
+  router
 });
