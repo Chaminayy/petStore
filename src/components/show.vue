@@ -5,9 +5,25 @@
 </template>
 
 <script>
+import { mapGetters,mapMutations } from 'vuex'
+
 export default {
   name: 'show',
+  computed: {
+    ...mapGetters({
+      Login: 'Login'
+    }),
+    ddLogin: {
+      get () {
+        return this.Login
+      },
+      set (val) {
+        this.SETLOGIN(val)
+      }
+    }
+  },
   mounted() {
+    console.log(this.ddLogin)
     const myChart = this.$echarts.init(document.querySelector('#main'))
     myChart.setOption({
       title: {

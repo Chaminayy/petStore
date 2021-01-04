@@ -109,6 +109,7 @@
 
 <script>
 import path from './mixins/path';
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'App',
@@ -126,6 +127,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(['SETLOGIN']),
     async loginChecked () {
       if (this.user.phoneNumber === '') {
         this.$message.error('请输入您的账号');
@@ -142,7 +144,8 @@ export default {
       this.login(params)
     },
     async login (params, hint = true) {
-      const res = await this.$axios.post('http://localhost:3000/', {
+      console.log(this.Login)
+      const res = await this.$http.post('', {
         params,
       });
       if (res.data.code === 200) {
@@ -180,6 +183,17 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      Login: 'Login'
+    }),
+    ddLogin: {
+      get () {
+        return this.Login
+      },
+      set (val) {
+        this.SETLOGIN(val)
+      }
+    },
     dropdownNav() {
       return ['我的主页', '账号管理', '福利中心'];
     },
@@ -187,9 +201,11 @@ export default {
   async mounted() {
     if (window.localStorage.getItem('phoneNumber') !== null && window.localStorage.getItem('password') !== null) {
       const params = this.handleStorage('get')
-      console.log(params)
       this.login(params, false)
     }
+    console.log(this.ddLogin)
+    this.ddLogin = 'shit'
+    console.log(this.ddLogin)
   }
 };
 </script>
@@ -432,20 +448,17 @@ export default {
         margin-bottom: 40px;
       }
       .login {
-        width: 284px;
         height: 45px;
         margin: 20px auto;
       }
       .loginBtn {
-        width: 285px;
         margin: 30px auto;
         .el-button {
           text-align: center;
-          width: 285px !important;
+          width: 100% !important;
         }
       }
       .footerFun {
-        width: 285px;
         display: flex;
         margin: 0 auto 30px auto;
         justify-content: space-between;
