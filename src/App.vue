@@ -432,20 +432,21 @@ export default {
         margin-bottom: 40px;
       }
       .login {
-        width: 284px;
+        /*width: 284px;*/
         height: 45px;
         margin: 20px auto;
       }
       .loginBtn {
-        width: 285px;
+        /*width: 285px;*/
         margin: 30px auto;
         .el-button {
           text-align: center;
-          width: 285px !important;
+          /*width: 285px !important;*/
+          width: 100%;
         }
       }
       .footerFun {
-        width: 285px;
+        /*width: 285px;*/
         display: flex;
         margin: 0 auto 30px auto;
         justify-content: space-between;
