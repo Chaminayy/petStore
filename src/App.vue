@@ -13,12 +13,12 @@
             <li @click="$goto('/about')">
               <span><a>关于我们</a></span>
             </li>
-            <li v-show="isLogin" @click="$goto('/order')">
+            <li v-show="gIsLogin" @click="$goto('/order')">
               <span><a>订单中心</a></span>
             </li>
           </ul>
         </div>
-        <div class="login" v-if="!isLogin">
+        <div class="login" v-if="!gIsLogin">
           <ul id="login-menu">
             <li><a @click="loginShow = true">登录</a></li>
             <li><el-button @click="loginShow = true">免费注册</el-button></li>
@@ -34,8 +34,8 @@
             <div class="dropdown-content">
               <a class="me" href="javascript: alert('我的主页')">
                 <div class="user-wrapper">
-                  <p class="user-name">{{userInfo.userName}}</p>
-                  <p class="user-account">{{userInfo.userPhone}}</p>
+                  <p class="user-name">{{gUserInfo.userName}}</p>
+                  <p class="user-account">{{gUserInfo.userPhone}}</p>
                 </div>
               </a>
               <ul class="dropdown-nav">
@@ -116,19 +116,19 @@ export default {
   mixins: [path],
   data() {
     return {
-      isLogin: false,
+      // isLogin: false,
       loginShow: false,
       userShowMore: false,
       user: {
         phoneNumber: '',
         password: '',
       },
-      userInfo: {},
+      // userInfo: {},
     };
   },
   methods: {
-    ...mapMutations(['SETLOGIN']),
-    async loginChecked() {
+    ...mapMutations(['SETLOGIN', 'SETUSERINFO']),
+    loginChecked () {
       if (this.user.phoneNumber === '') {
         this.$message.error('请输入您的账号');
         return '';
@@ -143,66 +143,81 @@ export default {
       };
       this.login(params);
     },
-    async login(params, hint = true) {
-      const res = await this.$http.post('', {
+    async login(params) {
+      const res = await this.$http.post('api/login', {
         params,
       });
-      console.log(res)
       if (res.data.code === 200) {
-        this.userInfo = res.data.user;
-        if (hint === true) {
-          this.$message.success(res.data.message);
-        }
-        this.isLogin = true;
+        this.gUserInfo = res.data.user;
+        this.$message.success(res.data.message);
+        this.gIsLogin = true;
         this.loginShow = false;
-        console.log(params);
-        this.handleStorage('set', params);
-      } else if (hint === true) {
+        this.handleStorage('set', res.data.user);
+      } else {
         this.$message.error(res.data.message);
       }
     },
     logout() {
-      this.isLogin = false;
+      this.gIsLogin = false;
       this.userShowMore = false;
       this.$goto('/');
       this.handleStorage('set');
     },
-    handleStorage(type, params = { phoneNumber: null, password: null }) {
+    handleStorage(type, params = { token: null, userPhone: null }) {
       if (type === 'set') {
-        window.localStorage.setItem('phoneNumber', params.phoneNumber);
-        window.localStorage.setItem('password', params.password);
+        window.localStorage.setItem('token', params.token);
+        window.localStorage.setItem('userPhone', params.userPhone);
         return '';
       }
       return {
-        phoneNumber: window.localStorage.getItem('phoneNumber'),
-        password: window.localStorage.getItem('password'),
+        token: window.localStorage.getItem('token'),
+        userPhone: window.localStorage.getItem('userPhone'),
       };
     },
   },
   computed: {
     ...mapGetters({
-      Login: 'Login',
+      isLogin: 'isLogin',
+      userInfo: 'userInfo'
     }),
-    ddLogin: {
-      get() {
-        return this.Login;
+    gIsLogin: {
+      get () {
+        return this.isLogin;
       },
       set(val) {
         this.SETLOGIN(val);
       },
+    },
+    gUserInfo: {
+      get () {
+        return this.userInfo
+      },
+      set(val) {
+        this.SETUSERINFO(val)
+      }
     },
     dropdownNav() {
       return ['我的主页', '账号管理', '福利中心'];
     },
   },
   async mounted() {
-    if (window.localStorage.getItem('phoneNumber') !== null && window.localStorage.getItem('password') !== null) {
-      const params = this.handleStorage('get');
-      this.login(params, false);
+    const userInfoLog = this.handleStorage('get')
+    if (userInfoLog.token !== 'null') {
+      const params = {
+        token: userInfoLog.token,
+        phoneNumber: userInfoLog.userPhone,
+      }
+      const res = await this.$http.post('api/loginCheck', { params })
+      if (res.data.code === 200) {
+        this.gUserInfo = res.data.user;
+        this.gIsLogin = true;
+        this.loginShow = false;
+      } else {
+        this.$message.error(res.data.message);
+      }
+    } else {
+      this.loginShow = true;
     }
-    console.log(this.ddLogin);
-    this.ddLogin = 'shit';
-    console.log(this.ddLogin);
   },
 };
 </script>
@@ -218,7 +233,7 @@ export default {
     .nav {
       width: 100%;
       height: 60px;
-      background: #E8E7E3;
+      background: rgb(56, 40, 41);
       .logo {
         margin-left: 30px;
         float: left;
@@ -229,11 +244,11 @@ export default {
         line-height: 60px;
         text-align: center;
         .titleIcon {
-          display: inline-block;
-          width: 60px;
+          display: flex;
+          width: 100px;
           height: 60px;
-          background: url("./assets/images/titleIcon.png");
-          background-size: 60px;
+          background: url("./assets/images/logo.png") no-repeat 7px;
+          background-size: 93px;
         }
       }
       .list {
@@ -248,12 +263,14 @@ export default {
             span {
               font-size: 16px;
               a {
-                color: #415058;
+                color: #fff;
               }
             }
           }
           li:hover {
-            border-bottom: 3px solid #B3C0D1;
+            a {
+              color: rgb(246, 171, 74);
+            }
           }
         }
       }
@@ -271,7 +288,7 @@ export default {
             margin-left: 20px;
             a {
               font-size: 15px;
-              color: #415058;
+              color: #fff;
             }
             /deep/ .el-button {
               background: #db5151;
@@ -347,8 +364,9 @@ export default {
             li {
               height: 32px;
               a {
+                box-sizing: border-box;
                 display: flex;
-                padding: 0 16px;
+                padding-left: 16px;
                 width: 100%;
                 height: 100%;
                 align-items: center;
@@ -382,16 +400,14 @@ export default {
     position: relative;
     float: inherit;
     width: 100%;
-    height: 1000px;
     margin: 0 auto;
-    padding: 65px 0 45px;
-    max-width: 1200px;
-    min-width: 768px;
+    padding: 60px 0 45px;
+    /*max-width: 1200px;*/
+    /*min-width: 768px;*/
     .content {
       border-radius: 5px;
       width: 100%;
       height: 100%;
-      background: #fff;
     }
   }
   .footer-frame {
@@ -445,16 +461,10 @@ export default {
         margin-bottom: 40px;
       }
       .login {
-<<<<<<< HEAD
-        /*width: 284px;*/
-=======
->>>>>>> 4ef753c4e1427b5681bc71396bcda3bbc74d882a
         height: 45px;
         margin: 20px auto;
       }
       .loginBtn {
-<<<<<<< HEAD
-        /*width: 285px;*/
         margin: 30px auto;
         .el-button {
           text-align: center;
@@ -464,7 +474,6 @@ export default {
       }
       .footerFun {
         /*width: 285px;*/
-=======
         margin: 30px auto;
         .el-button {
           text-align: center;
@@ -472,7 +481,6 @@ export default {
         }
       }
       .footerFun {
->>>>>>> 4ef753c4e1427b5681bc71396bcda3bbc74d882a
         display: flex;
         margin: 0 auto 30px auto;
         justify-content: space-between;

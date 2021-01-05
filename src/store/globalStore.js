@@ -1,13 +1,18 @@
 export const globalStore = {
   state: {
-    Login: 'hhhhh',
+    isLogin: false,
+    userInfo: {}
   },
   getters: {
-    Login: state => state.Login
+    isLogin: state => state.isLogin,
+    userInfo: state => state.userInfo
   },
   mutations: {
     'SETLOGIN' (state, value) {
-      state.Login = value
+      state.isLogin = value
+    },
+    'SETUSERINFO' (state, params) {
+      state.userInfo = params
     }
   }
 }

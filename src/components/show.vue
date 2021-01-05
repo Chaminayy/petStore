@@ -5,22 +5,22 @@
 </template>
 
 <script>
-import { mapGetters,mapMutations } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'show',
   computed: {
     ...mapGetters({
-      Login: 'Login'
+      isLogin: 'isLogin',
     }),
     ddLogin: {
-      get () {
-        return this.Login
+      get() {
+        return this.isLogin;
       },
-      set (val) {
-        this.SETLOGIN(val)
-      }
-    }
+      set(val) {
+        this.SETLOGIN(val);
+      },
+    },
   },
   mounted() {
     console.log(this.ddLogin)
