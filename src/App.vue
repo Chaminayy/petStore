@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import path from './mixins/path';
 
 export default {
@@ -126,7 +127,8 @@ export default {
     };
   },
   methods: {
-    async loginChecked () {
+    ...mapMutations(['SETLOGIN']),
+    async loginChecked() {
       if (this.user.phoneNumber === '') {
         this.$message.error('请输入您的账号');
         return '';
@@ -139,12 +141,13 @@ export default {
         phoneNumber: this.user.phoneNumber,
         password: this.user.password,
       };
-      this.login(params)
+      this.login(params);
     },
-    async login (params, hint = true) {
-      const res = await this.$axios.post('http://localhost:3000/', {
+    async login(params, hint = true) {
+      const res = await this.$http.post('', {
         params,
       });
+      console.log(res)
       if (res.data.code === 200) {
         this.userInfo = res.data.user;
         if (hint === true) {
@@ -152,45 +155,55 @@ export default {
         }
         this.isLogin = true;
         this.loginShow = false;
-        console.log(params)
-        this.handleStorage('set', params)
-      } else {
-        if (hint === true) {
-          this.$message.error(res.data.message);
-        }
+        console.log(params);
+        this.handleStorage('set', params);
+      } else if (hint === true) {
+        this.$message.error(res.data.message);
       }
     },
-    logout () {
+    logout() {
       this.isLogin = false;
       this.userShowMore = false;
-      this.$goto('/')
-      this.handleStorage('set')
+      this.$goto('/');
+      this.handleStorage('set');
     },
-    handleStorage (type, params = { phoneNumber: null, password: null }) {
+    handleStorage(type, params = { phoneNumber: null, password: null }) {
       if (type === 'set') {
-        window.localStorage.setItem('phoneNumber', params.phoneNumber)
-        window.localStorage.setItem('password', params.password)
+        window.localStorage.setItem('phoneNumber', params.phoneNumber);
+        window.localStorage.setItem('password', params.password);
         return '';
-      } else {
-        return {
-          phoneNumber: window.localStorage.getItem('phoneNumber'),
-          password: window.localStorage.getItem('password')
-        }
       }
-    }
+      return {
+        phoneNumber: window.localStorage.getItem('phoneNumber'),
+        password: window.localStorage.getItem('password'),
+      };
+    },
   },
   computed: {
+    ...mapGetters({
+      Login: 'Login',
+    }),
+    ddLogin: {
+      get() {
+        return this.Login;
+      },
+      set(val) {
+        this.SETLOGIN(val);
+      },
+    },
     dropdownNav() {
       return ['我的主页', '账号管理', '福利中心'];
     },
   },
   async mounted() {
     if (window.localStorage.getItem('phoneNumber') !== null && window.localStorage.getItem('password') !== null) {
-      const params = this.handleStorage('get')
-      console.log(params)
-      this.login(params, false)
+      const params = this.handleStorage('get');
+      this.login(params, false);
     }
-  }
+    console.log(this.ddLogin);
+    this.ddLogin = 'shit';
+    console.log(this.ddLogin);
+  },
 };
 </script>
 
@@ -432,11 +445,15 @@ export default {
         margin-bottom: 40px;
       }
       .login {
+<<<<<<< HEAD
         /*width: 284px;*/
+=======
+>>>>>>> 4ef753c4e1427b5681bc71396bcda3bbc74d882a
         height: 45px;
         margin: 20px auto;
       }
       .loginBtn {
+<<<<<<< HEAD
         /*width: 285px;*/
         margin: 30px auto;
         .el-button {
@@ -447,6 +464,15 @@ export default {
       }
       .footerFun {
         /*width: 285px;*/
+=======
+        margin: 30px auto;
+        .el-button {
+          text-align: center;
+          width: 100% !important;
+        }
+      }
+      .footerFun {
+>>>>>>> 4ef753c4e1427b5681bc71396bcda3bbc74d882a
         display: flex;
         margin: 0 auto 30px auto;
         justify-content: space-between;

@@ -1,19 +1,21 @@
 import Vue from 'vue';
-import axios from 'axios';
+import App from './App';
+import store from './store'
 import echarts from 'echarts';
+import service from './common/service'
 import less from 'less';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
-import App from './App';
+
 
 import './styles/index.less';
 import './assets/iconfont/iconfont.css';
 
 import router from './router';
 
-Vue.prototype.$axios = axios
 Vue.prototype.$echarts = echarts
+Vue.prototype.$http = service
 
 Vue.config.productionTip = false;
 Vue.use(less);
@@ -24,5 +26,6 @@ Vue.component(CollapseTransition.name, CollapseTransition);
 new Vue({
   el: '#app',
   render: h => h(App),
-  router
+  router,
+  store
 });
