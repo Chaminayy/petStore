@@ -20,8 +20,8 @@
         </div>
         <div class="login" v-if="!gIsLogin">
           <ul id="login-menu">
-            <li><a @click="loginShow = true">登录</a></li>
-            <li><el-button @click="loginShow = true">免费注册</el-button></li>
+            <li><a @click="handleDialog(1)">登录</a></li>
+            <li><el-button @click="handleDialog(2)">免费注册</el-button></li>
           </ul>
         </div>
         <div class="workspace" v-else @click="userShowMore = !userShowMore">
@@ -72,35 +72,94 @@
     <el-dialog
       class="dia_Action"
       width="20%"
+      v-loading="fullscreenLoading"
       :close-on-click-modal="false"
       :visible.sync="loginShow"
-      @close="loginShow = false"
+      @close="closeDialog"
       center>
-      <h2 class="login_title">登录</h2>
-      <div class="login">
-        <el-input
-          prefix-icon="el-icon-user"
-          v-model="user.phoneNumber"
-          placeholder="请输入您的账号"></el-input>
-      </div>
-      <div class="login">
-        <el-input
-          prefix-icon="el-icon-lock"
-          v-model="user.password"
-          placeholder="请输入您的密码"
-          type="password"></el-input>
-      </div>
-      <div class="loginBtn">
-        <span slot="footer">
-          <el-button type="primary" @click="loginChecked">登 录</el-button>
-        </span>
-      </div>
-      <div class="footerFun">
-        <div class="register">
-          <span><a href="javascript: alert('注册账号')">注册账号</a></span>
+      <div v-show="tag === 1">
+        <h2 class="login_title">登录</h2>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-user"
+            v-model="user.phoneNumber"
+            placeholder="请输入您的账号"></el-input>
         </div>
-        <div class="forget">
-          <span><a href="javascript: alert('忘记密码')">忘记密码</a></span>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="user.password"
+            placeholder="请输入您的密码"
+            type="password"></el-input>
+        </div>
+        <div class="loginBtn">
+          <span slot="footer">
+            <el-button type="primary" @click="loginChecked">登 录</el-button>
+          </span>
+        </div>
+        <div class="footerFun">
+          <div class="register">
+            <span><a @click="tag = 2">注册账号</a></span>
+          </div>
+          <div class="forget">
+            <span><a href="javascript: alert('忘记密码')">忘记密码</a></span>
+          </div>
+        </div>
+      </div>
+      <div v-show="tag === 2">
+        <h2 class="login_title">注册</h2>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-user"
+            v-model="registerInfo.phoneNumber"
+            @input="checkPhone"
+            placeholder="请输入您的账号"></el-input>
+        </div>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-user"
+            v-model="registerInfo.username"
+            placeholder="请输入您的用户名"></el-input>
+        </div>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="registerInfo.password"
+            @blur="passwordCheck"
+            placeholder="请输入您的密码"
+            type="password"></el-input>
+        </div>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="registerInfo.checkPassword"
+            @blur="passwordCheck"
+            placeholder="请再次输入您的密码"
+            type="password"></el-input>
+        </div>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-message"
+            v-model="registerInfo.email"
+            placeholder="请再次输入您的邮箱"
+          ></el-input>
+        </div>
+        <div class="code_check">
+          <el-input
+            prefix-icon="el-icon-bank-card"
+            v-model="registerInfo.code"
+            placeholder="验证码">
+          </el-input>
+          <el-button
+            type="warning"
+            @click="sendMail"
+            :disabled="!registerInfo.email.length > 0"
+            >点击发送</el-button>
+        </div>
+        <div class="loginBtn">
+          <span slot="footer">
+            <el-button type="primary" @click="register" :disabled="registerDisabled">注 &nbsp;&nbsp;&nbsp; 册</el-button>
+          </span>
         </div>
       </div>
     </el-dialog>
@@ -116,18 +175,98 @@ export default {
   mixins: [path],
   data() {
     return {
+      tag: 1, // dialog 弹窗当前显示的部分
       // isLogin: false,
-      loginShow: false,
-      userShowMore: false,
-      user: {
+      loginShow: false, // 登录注册弹窗显示
+      userShowMore: false, // 登录之后的头像部分弹窗显示
+      isCheckPhone: false,
+      isCheckPassword: false,
+      fullscreenLoading: false, // 加载
+      user: { // 登陆时的用户信息
         phoneNumber: '',
         password: '',
       },
-      // userInfo: {},
+      registerInfo: { // 注册时的用户信息
+        phoneNumber: '',
+        username: '',
+        password: '',
+        checkPassword: '',
+        email: '',
+        code: ''
+      }
     };
   },
   methods: {
     ...mapMutations(['SETLOGIN', 'SETUSERINFO']),
+    closeDialog () {
+      this.loginShow = false
+      this.tag = 1
+    },
+    handleDialog (num) {
+      this.loginShow = true
+      this.tag = num
+    },
+    async checkPhone () {
+      if (this.registerInfo.phoneNumber !== '') {
+        let params = {
+          phoneNumber: this.registerInfo.phoneNumber
+        }
+        const res = await this.$http.post('api/registerCheck', { params })
+        if (res.data.code === 500) {
+          this.$message.error(res.data.message)
+          this.isCheckPhone = false
+          return ''
+        }
+        this.isCheckPhone = true
+      }
+    },
+    passwordCheck () {
+      if (this.registerInfo.password !== this.registerInfo.checkPassword) {
+        this.isCheckPassword = false
+        this.$message.error('两次密码不一致')
+        return ''
+      }
+      if (this.registerInfo.password === '' && this.registerInfo.checkPassword === '') {
+        this.isCheckPhone = false
+        return ''
+      }
+      this.isCheckPassword = true
+    },
+    async sendMail () {
+      this.fullscreenLoading = true
+      let params = {
+        email: this.registerInfo.email
+      }
+      const res = await this.$http.post('api/sendMail', { params })
+      if (res.data.code === 200) {
+        this.fullscreenLoading = false
+        this.$message.success(res.data.message)
+      } else {
+        this.fullscreenLoading = false
+        this.$message.error(res.data.message)
+      }
+    },
+    async register () {
+      for (let i in this.registerInfo) {
+        if(this.registerInfo[i] === '') {
+          this.$message.error('请完整填写信息')
+          return ''
+        }
+      }
+      let params = {
+        ...this.registerInfo
+      }
+      const res = await this.$http.post('api/register', { params })
+      if (res.data.code === 200) {
+        this.$message.success(res.data.message)
+        this.tag = 1
+        for (let i in this.registerInfo) {
+          this.registerInfo[i] = ''
+        }
+      } else {
+        this.$message.error(res.data.message)
+      }
+    },
     loginChecked () {
       if (this.user.phoneNumber === '') {
         this.$message.error('请输入您的账号');
@@ -180,6 +319,9 @@ export default {
       isLogin: 'isLogin',
       userInfo: 'userInfo'
     }),
+    registerDisabled () {
+      return !(this.isCheckPhone && this.isCheckPassword)
+    },
     gIsLogin: {
       get () {
         return this.isLogin;
@@ -463,6 +605,12 @@ export default {
       .login {
         height: 45px;
         margin: 20px auto;
+      }
+      .code_check {
+        display: flex;
+        /deep/ .el-input {
+          margin-right: 20px;
+        }
       }
       .loginBtn {
         margin: 30px auto;
