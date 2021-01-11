@@ -1,5 +1,12 @@
 import axios from 'axios';
 const baseURL = 'http://localhost:3000/'
+
+let i18n = {
+  t: function () { }
+}
+export const setI18n = (I18N) => {
+  i18n = I18N
+}
 export default {
   get (url, params, options = {}) {
     return axios.get(baseURL + url, params)

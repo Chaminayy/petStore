@@ -8,20 +8,20 @@
         <div class="list">
           <ul>
             <li @click="$goto('/show')">
-              <span><a>宠物展示</a></span>
+              <span><a>{{$t('common.aniShow')}}</a></span>
             </li>
             <li @click="$goto('/about')">
-              <span><a>关于我们</a></span>
+              <span><a>{{$t('common.aboutUs')}}</a></span>
             </li>
             <li v-show="gIsLogin" @click="$goto('/order')">
-              <span><a>订单中心</a></span>
+              <span><a>{{$t('common.orderCenter')}}</a></span>
             </li>
           </ul>
         </div>
         <div class="login" v-if="!gIsLogin">
           <ul id="login-menu">
-            <li><a @click="handleDialog(1)">登录</a></li>
-            <li><el-button @click="handleDialog(2)">免费注册</el-button></li>
+            <li><a @click="handleDialog(1)">{{$t('common.login')}}</a></li>
+            <li><el-button @click="handleDialog(2)">{{$t('common.freeRegister')}}</el-button></li>
           </ul>
         </div>
         <div class="workspace" v-else @click="userShowMore = !userShowMore">
@@ -39,12 +39,12 @@
                 </div>
               </a>
               <ul class="dropdown-nav">
-                <li v-for="(item, index) in dropdownNav" :key="index">
+                <li v-for="(item, index) in $t('common.dropdownNav')" :key="index">
                   <a href="javascript:alert('点我干嘛')">{{item}}</a>
                 </li>
               </ul>
               <ul class="dropdown-nav sign-out">
-                <li><a @click="logout">退出登录</a></li>
+                <li><a @click="logout">{{$t('common.outLog')}}</a></li>
               </ul>
             </div>
           </div>
@@ -58,15 +58,15 @@
     </div>
     <footer class="footer-frame clearfix">
       <div class="bottom-layer-left">
-        <p class="lh"><a href="javascript:;">关于沃尔马宠物店</a></p>
-        <p class="lh"><a href="javascript:;">沃尔马宠物店营销</a></p>
-        <p class="lh"><a href="javascript:;">意见反馈</a></p>
-        <p class="lh"><a href="javascript:;">帮助中心</a></p>
-        <p class="lh"><a href="javascript: alert('想投诉？臭傻逼');">投诉我们</a></p>
+        <p class="lh"><a href="javascript:;">{{$t('common.leftMark1')}}</a></p>
+        <p class="lh"><a href="javascript:;">{{$t('common.leftMark2')}}</a></p>
+        <p class="lh"><a href="javascript:;">{{$t('common.leftMark3')}}</a></p>
+        <p class="lh"><a href="javascript:;">{{$t('common.leftMark4')}}</a></p>
+        <p class="lh"><a href="javascript: alert('想投诉？臭傻逼');">{{$t('common.leftMark5')}}</a></p>
       </div>
       <div class="bottom-layer-right">
-        <span class="lh">@2020&nbsp;Wal-Horse&nbsp;</span>
-        <span class="lh">(粤)-经营性-2020-0202</span>
+        <span class="lh">{{$t('common.rightMark1')}}</span>
+        <span class="lh">{{$t('common.rightMark2')}}</span>
       </div>
     </footer>
     <el-dialog
@@ -75,10 +75,10 @@
       v-loading="fullscreenLoading"
       :close-on-click-modal="false"
       :visible.sync="loginShow"
-      @close="closeDialog"
+      @closed="closeDialog"
       center>
       <div v-show="tag === 1">
-        <h2 class="login_title">登录</h2>
+        <h2 class="login_title">{{$t('common.login')}}</h2>
         <div class="login">
           <el-input
             prefix-icon="el-icon-user"
@@ -94,20 +94,20 @@
         </div>
         <div class="loginBtn">
           <span slot="footer">
-            <el-button type="primary" @click="loginChecked">登 录</el-button>
+            <el-button type="primary" @click="loginChecked">{{$t('common.login1')}}</el-button>
           </span>
         </div>
         <div class="footerFun">
           <div class="register">
-            <span><a @click="tag = 2">注册账号</a></span>
+            <span><a @click="tag = 2">{{$t('common.register3')}}</a></span>
           </div>
           <div class="forget">
-            <span><a href="javascript: alert('忘记密码')">忘记密码</a></span>
+            <span><a @click="tag = 3">{{$t('common.forgetPassword')}}</a></span>
           </div>
         </div>
       </div>
       <div v-show="tag === 2">
-        <h2 class="login_title">注册</h2>
+        <h2 class="login_title">{{$t('common.register')}}</h2>
         <div class="login">
           <el-input
             prefix-icon="el-icon-user"
@@ -125,7 +125,7 @@
           <el-input
             prefix-icon="el-icon-lock"
             v-model="registerInfo.password"
-            @blur="passwordCheck"
+            @blur="passwordCheck(null)"
             placeholder="请输入您的密码"
             type="password"></el-input>
         </div>
@@ -133,7 +133,7 @@
           <el-input
             prefix-icon="el-icon-lock"
             v-model="registerInfo.checkPassword"
-            @blur="passwordCheck"
+            @blur="passwordCheck(null)"
             placeholder="请再次输入您的密码"
             type="password"></el-input>
         </div>
@@ -152,13 +152,68 @@
           </el-input>
           <el-button
             type="warning"
-            @click="sendMail"
+            @click="sendMail(null)"
             :disabled="!registerInfo.email.length > 0"
-            >点击发送</el-button>
+            >{{$t('common.sendBtn')}}</el-button>
         </div>
         <div class="loginBtn">
           <span slot="footer">
-            <el-button type="primary" @click="register" :disabled="registerDisabled">注 &nbsp;&nbsp;&nbsp; 册</el-button>
+            <el-button type="primary" @click="register" :disabled="registerDisabled">{{$t('common.register1')}}</el-button>
+          </span>
+        </div>
+      </div>
+      <div v-show="tag === 3">
+        <h2 class="login_title">{{$t('common.findPassword')}}</h2>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-user"
+            v-model="forgetUser.phoneNumber"
+            placeholder="请输入您的账号"></el-input>
+        </div>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-message"
+            v-model="forgetUser.email"
+            placeholder="请输入您的注册邮箱"></el-input>
+        </div>
+        <div class="code_check">
+          <el-input
+            prefix-icon="el-icon-bank-card"
+            v-model="forgetUser.code"
+            placeholder="验证码">
+          </el-input>
+          <el-button
+            type="warning"
+            @click="sendMail('forget')"
+            :disabled="!forgetUser.email.length > 0"
+          >{{$t('common.sendBtn')}}</el-button>
+        </div>
+        <div class="loginBtn">
+          <span slot="footer">
+            <el-button type="primary" @click="tag = 4" :disabled="forgetUser.code === '' || +forgetUser.code !== +codeCheck">{{$t('common.nextStep')}}</el-button>
+          </span>
+        </div>
+      </div>
+      <div v-show="tag === 4">
+        <h2 class="login_title">{{$t('common.resetPassword')}}</h2>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="forgetUser.password"
+            placeholder="请输入您的密码"
+            type="password"></el-input>
+        </div>
+        <div class="login">
+          <el-input
+            prefix-icon="el-icon-lock"
+            v-model="forgetUser.newPassword"
+            @blur="passwordCheck('forget')"
+            placeholder="请再次输入您的新密码"
+            type="password"></el-input>
+        </div>
+        <div class="loginBtn">
+          <span slot="footer">
+            <el-button type="primary" @click="forgetSure" :disabled="forgetUser.password === '' || forgetUser.newPassword === '' || forgetUser.password !== forgetUser.newPassword">{{$t('common.sure')}}</el-button>
           </span>
         </div>
       </div>
@@ -179,9 +234,10 @@ export default {
       // isLogin: false,
       loginShow: false, // 登录注册弹窗显示
       userShowMore: false, // 登录之后的头像部分弹窗显示
-      isCheckPhone: false,
+      isCheckPhone: false, // 密码检验判断
       isCheckPassword: false,
       fullscreenLoading: false, // 加载
+      codeCheck: '', // 验证码判断
       user: { // 登陆时的用户信息
         phoneNumber: '',
         password: '',
@@ -193,19 +249,54 @@ export default {
         checkPassword: '',
         email: '',
         code: ''
+      },
+      forgetUser: { // 注册部分的数据
+        phoneNumber: '',
+        email: '',
+        password: '',
+        newPassword: '',
+        code: ''
       }
     };
   },
   methods: {
     ...mapMutations(['SETLOGIN', 'SETUSERINFO']),
+    // 找回密码最后一步操作
+    async forgetSure () {
+      if (this.forgetUser.password !== this.forgetUser.newPassword) {
+        this.$message.error(this.$t('registerHint1'))
+        return ''
+      }
+      let params = {
+        phoneNumber: this.forgetUser.phoneNumber,
+        password: this.forgetUser.password,
+        newPassword: this.forgetUser.newPassword
+      }
+      const res = await this.$http.post('api/forget', { params })
+      if (res.data.code === 200) {
+        this.$message.success(res.data.message)
+        this.tag = 1
+      } else {
+        this.$message.error(res.data.message)
+      }
+    },
+    // 关闭弹窗后初始化
     closeDialog () {
       this.loginShow = false
       this.tag = 1
+      this.user.password = ''
+      this.user.phoneNumber = ''
+      this.codeCheck = ''
+      for (let i in this.forgetUser) {
+        this.forgetUser[i] = ''
+      }
     },
+    // 打开弹窗
     handleDialog (num) {
       this.loginShow = true
       this.tag = num
     },
+    // 检测账号是否存在
     async checkPhone () {
       if (this.registerInfo.phoneNumber !== '') {
         let params = {
@@ -220,36 +311,57 @@ export default {
         this.isCheckPhone = true
       }
     },
-    passwordCheck () {
-      if (this.registerInfo.password !== this.registerInfo.checkPassword) {
-        this.isCheckPassword = false
-        this.$message.error('两次密码不一致')
-        return ''
+    // 检测两次输入的密码是否一致
+    passwordCheck (type = null) {
+      if (type === null) {
+        if (this.registerInfo.password !== this.registerInfo.checkPassword) {
+          this.isCheckPassword = false
+          this.$message.error(this.$t('common.registerHint1'))
+          return ''
+        }
+        if (this.registerInfo.password === '' && this.registerInfo.checkPassword === '') {
+          this.isCheckPhone = false
+          return ''
+        }
+        this.isCheckPassword = true
+      } else {
+        if (this.forgetUser.newPassword !== this.forgetUser.password) {
+          this.$message.error(this.$t('common.registerHint1'))
+        }
       }
-      if (this.registerInfo.password === '' && this.registerInfo.checkPassword === '') {
-        this.isCheckPhone = false
-        return ''
-      }
-      this.isCheckPassword = true
     },
-    async sendMail () {
+    // 发送邮箱
+    async sendMail (type = null) {
       this.fullscreenLoading = true
-      let params = {
-        email: this.registerInfo.email
+      let path = ''
+      let params = {}
+      if (type === null) {
+        path = 'api/sendMail'
+        params = {
+          email: this.registerInfo.email
+        }
+      } else {
+        path = 'api/forgetSendMail'
+        params = {
+          phoneNumber: this.forgetUser.phoneNumber,
+          email: this.forgetUser.email
+        }
       }
-      const res = await this.$http.post('api/sendMail', { params })
+      const res = await this.$http.post(path, { params })
       if (res.data.code === 200) {
         this.fullscreenLoading = false
         this.$message.success(res.data.message)
+        this.codeCheck = res.data.authCode
       } else {
         this.fullscreenLoading = false
         this.$message.error(res.data.message)
       }
     },
+    // 注册账号
     async register () {
       for (let i in this.registerInfo) {
         if(this.registerInfo[i] === '') {
-          this.$message.error('请完整填写信息')
+          this.$message.error(this.$t('common.registerHint2'))
           return ''
         }
       }
@@ -267,13 +379,14 @@ export default {
         this.$message.error(res.data.message)
       }
     },
+    // 登录时用户信息的判断
     loginChecked () {
       if (this.user.phoneNumber === '') {
-        this.$message.error('请输入您的账号');
+        this.$message.error(this.$t('common.loginHint1'));
         return '';
       }
       if (this.user.password === '') {
-        this.$message.error('请输入您的密码');
+        this.$message.error(this.$t('common.loginHint2'));
         return '';
       }
       const params = {
@@ -282,6 +395,7 @@ export default {
       };
       this.login(params);
     },
+    // 登录功能
     async login(params) {
       const res = await this.$http.post('api/login', {
         params,
@@ -296,12 +410,14 @@ export default {
         this.$message.error(res.data.message);
       }
     },
+    // 退出登录后回到首页
     logout() {
       this.gIsLogin = false;
       this.userShowMore = false;
       this.$goto('/');
       this.handleStorage('set');
     },
+    // 处理页面刷新时的token
     handleStorage(type, params = { token: null, userPhone: null }) {
       if (type === 'set') {
         window.localStorage.setItem('token', params.token);
@@ -322,6 +438,7 @@ export default {
     registerDisabled () {
       return !(this.isCheckPhone && this.isCheckPassword)
     },
+    // 设置全局登录状态
     gIsLogin: {
       get () {
         return this.isLogin;
@@ -337,11 +454,9 @@ export default {
       set(val) {
         this.SETUSERINFO(val)
       }
-    },
-    dropdownNav() {
-      return ['我的主页', '账号管理', '福利中心'];
-    },
+    }
   },
+  // 元素挂载完后判断是否登录
   async mounted() {
     const userInfoLog = this.handleStorage('get')
     if (userInfoLog.token !== 'null') {
