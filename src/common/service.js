@@ -1,5 +1,7 @@
 import axios from 'axios';
 const baseURL = 'http://localhost:3000/'
+// const baseURL = 'http://39.104.202.137:3000/'
+// const baseURL = 'http://121.196.167.112:3000/'
 
 let i18n = {
   t: function () { }

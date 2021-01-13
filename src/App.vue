@@ -459,7 +459,7 @@ export default {
   // 元素挂载完后判断是否登录
   async mounted() {
     const userInfoLog = this.handleStorage('get')
-    if (userInfoLog.token !== 'null') {
+    if (userInfoLog.token !== 'null' || userInfoLog.token !== null) {
       const params = {
         token: userInfoLog.token,
         phoneNumber: userInfoLog.userPhone,
