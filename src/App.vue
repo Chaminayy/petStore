@@ -459,12 +459,14 @@ export default {
   // 元素挂载完后判断是否登录
   async mounted() {
     const userInfoLog = this.handleStorage('get')
-    if (userInfoLog.token !== 'null' || userInfoLog.token !== null) {
+    if (userInfoLog.token === 'null' || userInfoLog.token === null) {
+      this.loginShow = true;
+    } else {
       const params = {
         token: userInfoLog.token,
         phoneNumber: userInfoLog.userPhone,
       }
-      const res = await this.$http.post('api/loginCheck', { params })
+      const res = await this.$http.post('api/loginCheck'  , { params })
       if (res.data.code === 200) {
         this.gUserInfo = res.data.user;
         this.gIsLogin = true;
@@ -472,8 +474,6 @@ export default {
       } else {
         this.$message.error(res.data.message);
       }
-    } else {
-      this.loginShow = true;
     }
   },
 };
