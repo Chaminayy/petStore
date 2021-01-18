@@ -1,7 +1,7 @@
 <template>
   <div class="indexFrame clearfix">
     <div class="top_video">
-      <video src="../assets/images/8.mp4" autoplay="true" muted="muted" loop="true"></video>
+      <video src="../../assets/images/8.mp4" autoplay="true" muted="muted" loop="true"></video>
     </div>
     <div class="about clearfix">
       <div class="about_content">
@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="right">
-          <img src="../assets/images/right_img.jpg" alt="">
+          <img src="../../assets/images/right_img.jpg" alt="">
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
       <div class="product_content">
         <div class="product_title">
           <h2>宠物用品</h2>
-          <img src="../assets/images/product_title.jpg" alt="">
+          <img src="../../assets/images/product_title.jpg" alt="">
         </div>
         <div class="images">
           <div class="images_1" v-for="(item, index) in productData" :k="index">
@@ -68,27 +68,48 @@
 </template>
 
 <script>
-import path from '../mixins/path';
+import utils from '../../mixins/utils'
 
 export default {
   name: 'index',
-  mixins: [path],
+  mixins: [utils],
+  data () {
+    return {
+      productData: [],
+    }
+  },
   computed: {
     serveData () {
       return [
-        { src: require('../assets/images/serve_1.png'), name: this.$t('index.serveName1'), content: this.$t('index.serveContent1')},
-        { src: require('../assets/images/serve_2.png'), name: this.$t('index.serveName2'), content: this.$t('index.serveContent2')},
-        { src: require('../assets/images/serve_3.png'), name: this.$t('index.serveName3'), content: this.$t('index.serveContent3')}
+        { src: require('../../assets/images/serve_1.png'), name: this.$t('index.serveName1'), content: this.$t('index.serveContent1')},
+        { src: require('../../assets/images/serve_2.png'), name: this.$t('index.serveName2'), content: this.$t('index.serveContent2')},
+        { src: require('../../assets/images/serve_3.png'), name: this.$t('index.serveName3'), content: this.$t('index.serveContent3')}
       ]
     },
-    productData () {
-      return [
-        { src: require('../assets/images/product_1.png'), name: '宠物脱毛梳', mark: '针对不同的毛发问题，具有不同的功能。家长们应该根据宠物的毛发类型来选择合适的梳子。' },
-        { src: require('../assets/images/product_2.png'), name: '狗狗胸背带牵引绳项圈', mark: '除了训练狗狗时可用来规范狗狗的行为，也是让狗主人与狗狗能快速建立良好主仆关系的最佳利器。' },
-        { src: require('../assets/images/product_3.png'), name: '幼犬磨牙耐咬棉绳结玩具球', mark: '在换牙时期为它准备一些可以啃咬的玩具，可帮助狗狗缓解长牙的不适感。避免因换牙而造成不必要的破坏。' },
-        { src: require('../assets/images/product_4.png'), name: '中大型狗狗用品狗食盆', mark: '给宠物选对了食盆才能让它们吃的更舒服。在买碗时要考虑宠物的特点。盆样式很重要，保持清洁也同样哦。' }
-      ]
-    }
+  },
+  methods: {
+    async getImages () {
+      const res = await this.$http.get('product/getImas')
+      this.productData = res.data
+      if (res.status === 200) {
+        for (let item of res.data) {
+          let params = {
+            src: item.src
+          }
+          let rest = await this.$http.get('product/getIma', { params })
+          if (rest.data.code === 200) {
+            let imgUrl = this.bufferToUrl(rest.data.data.data)
+            item.src = imgUrl
+          }
+        }
+      this.productData = res.data
+      }
+    },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.getImages()
+    },0)
   }
 }
 </script>
@@ -141,7 +162,7 @@ export default {
   }
   .serve {
     width: 100%;
-    background: url("../assets/images/serve.jpg") no-repeat;
+    background: url("../../assets/images/serve.jpg") no-repeat;
     .serve_content {
       padding-left: 20px;
       display: flex;
@@ -191,6 +212,7 @@ export default {
           width: 270px;
           height: 364px;
           border: 1px solid #ccc;
+          box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
           box-sizing: border-box;
           margin-right: 30px;
           .images_2 {
@@ -239,7 +261,7 @@ export default {
   .contact {
     width: 100%;
     height: 530px;
-    background: url("../assets/images/contact_bg.jpg");
+    background: url("../../assets/images/contact_bg.jpg");
     .contact_content {
       width: 1170px;
       height: 100%;

@@ -40,7 +40,7 @@
               </a>
               <ul class="dropdown-nav">
                 <li v-for="(item, index) in $t('common.dropdownNav')" :key="index">
-                  <a href="javascript:alert('点我干嘛')">{{item}}</a>
+                  <a @click="$goto(item.path)">{{item.title}}</a>
                 </li>
               </ul>
               <ul class="dropdown-nav sign-out">
@@ -457,7 +457,7 @@ export default {
     }
   },
   // 元素挂载完后判断是否登录
-  async mounted() {
+  async created() {
     const userInfoLog = this.handleStorage('get')
     if (userInfoLog.token === 'null' || userInfoLog.token === null) {
       this.loginShow = true;

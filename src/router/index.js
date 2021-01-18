@@ -1,9 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import index from '../components/index'
-import show from '../components/show'
-import about from '../components/about'
-import order from '../components/order'
 
 Vue.use(Router);
 const routes = [
@@ -14,22 +10,27 @@ const routes = [
   {
     path: '/index',
     name: 'index',
-    component: index,
+    component: () => import('../components/views/index'),
   },
   {
     path: '/show',
     name: 'show',
-    component: show,
+    component: () => import('../components/views/show'),
   },
   {
     path: '/about',
     name: 'about',
-    component: about
+    component: () => import('../components/views/about')
   },
   {
     path: '/order',
     name: 'order',
-    component: order
+    component: () => import('../components/views/order')
+  },
+  {
+    path: '/management',
+    name: 'management',
+    component: () => import('../components/profiles/management')
   }
 ]
 

@@ -22,7 +22,7 @@ const messageCn = {
     leftMark5: '投诉我们',
     rightMark1: '@2020 Wal-Horse ',
     rightMark2: '(粤)-经营性-2020-0202',
-    dropdownNav: ['我的主页', '账号管理', '福利中心'],
+    dropdownNav: [{title: '我的主页', path: 'management'}, {title: '账号管理', path: 'management'}, {title: '福利中心', path: 'management'}],
     registerHint1: '两次密码不一致',
     registerHint2: '请完整填写信息',
     loginHint1: '请输入您的账号',
