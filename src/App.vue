@@ -401,6 +401,7 @@ export default {
         params,
       });
       if (res.data.code === 200) {
+        document.cookie = `phoneNumber = ${res.data.user.userPhone}`
         this.gUserInfo = res.data.user;
         this.$message.success(res.data.message);
         this.gIsLogin = true;
@@ -608,6 +609,7 @@ export default {
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 width: 150px;
+                margin-bottom: 7px;
               }
               .user-account {
                 font-size: 12px;

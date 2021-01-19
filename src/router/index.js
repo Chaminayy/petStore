@@ -31,6 +31,11 @@ const routes = [
     path: '/management',
     name: 'management',
     component: () => import('../components/profiles/management')
+  },
+  {
+    path: '/changeDatum',
+    name: 'changeDatum',
+    component: () => import('../components/profiles/changeDatum')
   }
 ]
 

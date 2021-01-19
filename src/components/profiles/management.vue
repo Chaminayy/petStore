@@ -8,8 +8,8 @@
               <img src="https://modao.cc/images/avatar.png" alt="">
             </div>
             <span>{{ userInfo.userName }}</span>
-            <p class="author_sign_in_box">TA很神秘，什么都没有留下</p>
-            <el-button>编辑资料</el-button>
+            <p class="author_sign_in_box">{{getUserMark}}</p>
+            <el-button @click="$goto('/changeDatum')">编辑资料</el-button>
           </div>
           <div class="author_interest_box">
             <div class="content_interest_box">
@@ -44,21 +44,36 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
+import utils from "../../mixins/utils";
+
 export default {
   name: "management",
+  mixins: [utils],
+  data () {
+    return {
+      tag: 1,
+      fullscreenLoading: false,
+      profiles: {}
+    }
+  },
   computed: {
     ...mapGetters({
       userInfo: 'userInfo'
     }),
     gUserInfo () {
       return this.userInfo
+    },
+    getUserMark () {
+      console.log(this.profiles)
+      if (this.profiles.mark === '' || this.profiles.mark === null) {
+        return 'TA很神秘，什么都没有留下'
+      }
+      return this.profiles.mark
     }
   },
-  data () {
-    return {
-      tag: 1
-    }
+  mounted() {
+    this.getUserInfo(true)
   }
 }
 </script>
@@ -114,6 +129,7 @@ export default {
             text-align: center;
           }
           .author_sign_in_box {
+            margin-top: 10px;
             font-size: 12px;
             line-height: 17px;
             color: rgb(125, 139, 148);
