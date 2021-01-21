@@ -1,3 +1,4 @@
+import province from './province'
 const messageCn = {
   common: {
     title: '沃尔马宠物商店',
@@ -39,7 +40,8 @@ const messageCn = {
     serveContent1: '我们的专业团队提供特殊的美容服务，宠物美容对宠物的健康大有益处。',
     serveContent2: '给您的宠物个性化服务，提供宠物用品；猫、狗洁净用品；其他小动物附属用品。',
     serveContent3: '它们不仅仅是宠物更是家人，我们有专业团体，包括兽科技术员，兽医助理等。'
-  }
+  },
+  province
 }
 
 export default messageCn

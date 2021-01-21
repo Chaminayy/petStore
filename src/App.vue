@@ -24,15 +24,15 @@
             <li><el-button @click="handleDialog(2)">{{$t('common.freeRegister')}}</el-button></li>
           </ul>
         </div>
-        <div class="workspace" v-else @click="userShowMore = !userShowMore">
-          <div class="profile">
-            <img src="./assets/images/profile.png">
+        <div class="workspace" v-else>
+          <div class="profile"  @click="userShowMore = !userShowMore">
+            <img :src="icon">
             <i class="el-icon-arrow-down" v-show="!userShowMore"></i>
             <i class="el-icon-arrow-up" v-show="userShowMore"></i>
           </div>
           <div class="info-dropdown" v-show="userShowMore">
             <div class="dropdown-content">
-              <a class="me" href="javascript: alert('我的主页')">
+              <a class="me" @click="$goto('management')">
                 <div class="user-wrapper">
                   <p class="user-name">{{gUserInfo.userName}}</p>
                   <p class="user-account">{{gUserInfo.userPhone}}</p>
@@ -44,19 +44,19 @@
                 </li>
               </ul>
               <ul class="dropdown-nav sign-out">
-                <li><a @click="logout">{{$t('common.outLog')}}</a></li>
+                <li><a @click="confirm('退出登录，是否确定？', logout)">{{$t('common.outLog')}}</a></li>
               </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="content-frame clearfix">
+    <div class="content-frame clearfix" @click="userShowMore = false">
       <div class="content">
         <router-view></router-view>
       </div>
     </div>
-    <footer class="footer-frame clearfix">
+    <footer class="footer-frame clearfix"  @click="userShowMore = false">
       <div class="bottom-layer-left">
         <p class="lh"><a href="javascript:;">{{$t('common.leftMark1')}}</a></p>
         <p class="lh"><a href="javascript:;">{{$t('common.leftMark2')}}</a></p>
@@ -223,11 +223,11 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import path from './mixins/path';
+import utils from "./mixins/utils";
 
 export default {
   name: 'App',
-  mixins: [path],
+  mixins: [utils],
   data() {
     return {
       tag: 1, // dialog 弹窗当前显示的部分
@@ -236,6 +236,7 @@ export default {
       userShowMore: false, // 登录之后的头像部分弹窗显示
       isCheckPhone: false, // 密码检验判断
       isCheckPassword: false,
+      visible: false,
       fullscreenLoading: false, // 加载
       codeCheck: '', // 验证码判断
       user: { // 登陆时的用户信息
@@ -256,11 +257,12 @@ export default {
         password: '',
         newPassword: '',
         code: ''
-      }
+      },
+      profiles: {},
     };
   },
   methods: {
-    ...mapMutations(['SETLOGIN', 'SETUSERINFO']),
+    ...mapMutations(['SETLOGIN', 'SETUSERINFO', 'SETAVATAR']),
     // 找回密码最后一步操作
     async forgetSure () {
       if (this.forgetUser.password !== this.forgetUser.newPassword) {
@@ -407,6 +409,7 @@ export default {
         this.gIsLogin = true;
         this.loginShow = false;
         this.handleStorage('set', res.data.user);
+        this.getUserInfo(true)
       } else {
         this.$message.error(res.data.message);
       }
@@ -434,7 +437,8 @@ export default {
   computed: {
     ...mapGetters({
       isLogin: 'isLogin',
-      userInfo: 'userInfo'
+      userInfo: 'userInfo',
+      avatar: 'avatar'
     }),
     registerDisabled () {
       return !(this.isCheckPhone && this.isCheckPassword)
@@ -455,6 +459,9 @@ export default {
       set(val) {
         this.SETUSERINFO(val)
       }
+    },
+    icon () {
+      return this.gAvatar === '' ? require('./assets/images/profile.png') : this.bufferToUrl(this.gAvatar.data)
     }
   },
   // 元素挂载完后判断是否登录
@@ -472,11 +479,16 @@ export default {
         this.gUserInfo = res.data.user;
         this.gIsLogin = true;
         this.loginShow = false;
+        setTimeout(() => {
+          this.getUserInfo(true)
+        },500)
       } else {
         this.$message.error(res.data.message);
       }
     }
   },
+  mounted() {
+  }
 };
 </script>
 
@@ -558,6 +570,7 @@ export default {
         }
       }
       .workspace {
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         flex: 1 1;
         height: 100%;
         display: flex;
@@ -571,6 +584,7 @@ export default {
           img {
             width: 32px;
             height: 32px;
+            border-radius: 50%;
             margin-right: 5px;
           }
         }

@@ -1,11 +1,13 @@
 export const globalStore = {
   state: {
     isLogin: false,
-    userInfo: {}
+    userInfo: {},
+    avatar: ''
   },
   getters: {
     isLogin: state => state.isLogin,
-    userInfo: state => state.userInfo
+    userInfo: state => state.userInfo,
+    avatar: state => state.avatar
   },
   mutations: {
     'SETLOGIN' (state, value) {
@@ -13,6 +15,9 @@ export const globalStore = {
     },
     'SETUSERINFO' (state, params) {
       state.userInfo = params
+    },
+    'SETAVATAR' (state, params) {
+      state.avatar = params
     }
   }
 }

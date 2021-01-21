@@ -5,7 +5,7 @@
         <div class="left_side_of_main">
           <div class="author_inform_box">
             <div class="author_avatar_in_box">
-              <img src="https://modao.cc/images/avatar.png" alt="">
+              <img :src="icon" alt="">
             </div>
             <span>{{ userInfo.userName }}</span>
             <p class="author_sign_in_box">{{getUserMark}}</p>
@@ -30,7 +30,7 @@
         </div>
         <div class="right_side_of_main">
           <div class="tags_bar_in_right">
-            <div class="tags_in_bar" :class="{active: tag === 1}" @click="tag = 1">作品</div>
+            <div class="tags_in_bar" :class="{active: tag === 1}" @click="tag = 1">预约</div>
             <div class="tags_in_bar" :class="{active: tag === 2}" @click="tag = 2">收藏</div>
             <div class="tags_in_bar" :class="{active: tag === 3}" @click="tag = 3">关注</div>
           </div>
@@ -54,7 +54,7 @@ export default {
     return {
       tag: 1,
       fullscreenLoading: false,
-      profiles: {}
+      profiles: {},
     }
   },
   computed: {
@@ -65,11 +65,13 @@ export default {
       return this.userInfo
     },
     getUserMark () {
-      console.log(this.profiles)
       if (this.profiles.mark === '' || this.profiles.mark === null) {
         return 'TA很神秘，什么都没有留下'
       }
       return this.profiles.mark
+    },
+    icon () {
+      return this.gAvatar === '' ? require('../../assets/images/profile.png') : this.bufferToUrl(this.gAvatar.data)
     }
   },
   mounted() {

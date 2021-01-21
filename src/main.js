@@ -16,7 +16,6 @@ import './assets/iconfont/iconfont.css';
 
 import router from './router';
 
-
 Vue.config.productionTip = false;
 Vue.use(less);
 Vue.use(VueI18n)
