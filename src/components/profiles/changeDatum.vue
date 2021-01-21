@@ -13,11 +13,10 @@
         label-width="80px"
         :model="profiles">
         <el-form-item class="logo">
-          <label for="file" style="cursor: pointer">
-            <el-tooltip class="item" effect="dark" content="更换头像" placement="right">
-              <img :src="icon">
-            </el-tooltip>
-            <input type="file" hidden id="file" accept="image/*" @change="test($event)"/>
+          <label for="file" style="cursor: pointer; position: relative">
+            <div class="cover">更换头像</div>
+            <img :src="icon">
+            <input type="file" hidden id="file" accept="image/*" @change="upload($event)"/>
           </label>
         </el-form-item>
         <el-form-item label="姓名">
@@ -151,7 +150,8 @@ export default {
   },
   methods: {
     ...mapMutations(['SETUSERINFO', 'SETAVATAR']),
-    async test (event) {
+    // 上传头像
+    async upload (event) {
       let formData = new FormData()
       formData.append('icon', event.target.files[0])
       let config = {
@@ -316,6 +316,20 @@ export default {
         }
         img:hover {
           opacity: 0.5;
+        }
+        .cover {
+          width: 80px;
+          height: 80px;
+          position:absolute;
+          border-radius: 50%;
+          opacity: 0.5;
+          text-align: center;
+          line-height: 80px;
+          color: transparent;
+        }
+        .cover:hover {
+          background-color: black;
+          color: #fff;
         }
       }
       .el-form-item {
