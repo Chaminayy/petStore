@@ -14,7 +14,7 @@
         :model="profiles">
         <el-form-item class="logo">
           <label for="file" style="cursor: pointer; position: relative">
-            <div class="cover">更换头像</div>
+            <div class="cover"><p><i class="el-icon-camera-solid"></i></p>更换头像</div>
             <img :src="icon">
             <input type="file" hidden id="file" accept="image/*" @change="upload($event)"/>
           </label>
@@ -83,15 +83,15 @@
 
 <script>
 import {mapGetters, mapMutations} from 'vuex';
-import axios from 'axios'
 import utils from "../../mixins/utils";
+
 export default {
   name: "changeDatum",
   mixins: [utils],
   data () {
     // 改密码时的验证
     let validatePass = (rule, value, callback) => {
-      this.change.isSaveChange.password = true
+      this.change.isSaveChange.password = true;
       if (value === '') {
         callback(new Error('请输入密码'));
       } else {
@@ -100,9 +100,9 @@ export default {
         }
         callback();
       }
-    }
+    };
     let validatePass2 = (rule, value, callback) => {
-      this.change.isSaveChange.password = true
+      this.change.isSaveChange.password = true;
       if (value === '') {
         callback(new Error('请再次输入密码'));
       } else if (value !== this.change.newPassword) {
@@ -111,7 +111,7 @@ export default {
         this.change.isSaveChange.password = false
         callback();
       }
-    }
+    };
     return {
       tag: 1,
       profiles: { // 更改资料的数据
@@ -152,16 +152,16 @@ export default {
     ...mapMutations(['SETUSERINFO', 'SETAVATAR']),
     // 上传头像
     async upload (event) {
-      let formData = new FormData()
-      formData.append('icon', event.target.files[0])
+      let formData = new FormData();
+      formData.append('icon', event.target.files[0]);
       let config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
-      }
-      const res = await this.$http.post(`profiles/avatar?phoneNumber=${this.profiles['phone_number']}`, formData, config)
+      };
+      const res = await this.$http.post(`profiles/avatar?phoneNumber=${this.profiles['phone_number']}`, formData, config);
       if (res.data.code === 200) {
-        this.getAvatar(res.data.path, res.data.headName)
+        this.getAvatar(res.data.path, res.data.headName);
         this.$message.success(res.data.message)
       } else {
         this.$message.error(res.data.message)
@@ -169,21 +169,21 @@ export default {
     },
     // 发送邮箱
     async sendMail (type = null) {
-      this.fullscreenLoading = true
-      let path = ''
-      let params = {}
-      path = 'api/forgetSendMail'
+      this.fullscreenLoading = true;
+      let path = '';
+      let params = {};
+      path = 'api/forgetSendMail';
       params = {
         phoneNumber: this.profiles['phone_number'],
         email: this.profiles.email
-      }
-      const res = await this.$http.post(path, { params })
+      };
+      const res = await this.$http.post(path, { params });
       if (res.data.code === 200) {
-        this.fullscreenLoading = false
-        this.$message.success(res.data.message)
+        this.fullscreenLoading = false;
+        this.$message.success(res.data.message);
         this.codeCheck = res.data.authCode
       } else {
-        this.fullscreenLoading = false
+        this.fullscreenLoading = false;
         this.$message.error(res.data.message)
       }
     },
@@ -205,19 +205,19 @@ export default {
     },
     // 保存更改密码的 action
     async saveChange () {
-      this.fullscreenLoading = true
+      this.fullscreenLoading = true;
       let params = {
         phoneNumber: this.profiles['phone_number'],
         password: this.change.oldPassword,
         newPassword: this.change.newPassword
-      }
-      const res = await this.$http.post('profiles/changePassword', { params })
+      };
+      const res = await this.$http.post('profiles/changePassword', { params });
       if (res.data.code === 200) {
-        this.$message.success(res.data.message)
-        this.tag = 1
+        this.$message.success(res.data.message);
+        this.tag = 1;
         this.fullscreenLoading = false
       } else {
-        this.$message.error(res.data.message)
+        this.$message.error(res.data.message);
         this.fullscreenLoading = false
       }
     },
@@ -231,16 +231,16 @@ export default {
       let params = {
         ...this.profiles
       };
-      let phoneNumber = this.profiles['phone_number']
-      delete params['phone_number']
-      params.phoneNumber = phoneNumber
-      const res = await this.$http.post('profiles/saveDatum', { params })
+      let phoneNumber = this.profiles['phone_number'];
+      delete params['phone_number'];
+      params.phoneNumber = phoneNumber;
+      const res = await this.$http.post('profiles/saveDatum', { params });
       if (res.data.code === 200) {
-        this.$message.success(res.data.message)
-        this.fullscreenLoading = false
+        this.$message.success(res.data.message);
+        this.fullscreenLoading = false;
         this.gUserInfo = res.data.user
       } else {
-        this.$message.error(res.data.message)
+        this.$message.error(res.data.message);
         this.fullscreenLoading = false
       }
     }
@@ -324,8 +324,14 @@ export default {
           border-radius: 50%;
           opacity: 0.5;
           text-align: center;
-          line-height: 80px;
           color: transparent;
+          p {
+            margin-top: 13px;
+            height: 16px;
+            i {
+              font-size: 20px;
+            }
+          }
         }
         .cover:hover {
           background-color: black;

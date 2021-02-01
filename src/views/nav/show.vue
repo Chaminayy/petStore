@@ -23,7 +23,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.ddLogin)
     const myChart = this.$echarts.init(document.querySelector('#main'))
     myChart.setOption({
       title: {

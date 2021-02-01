@@ -26,28 +26,31 @@
         </div>
         <div class="workspace" v-else>
           <div class="profile"  @click="userShowMore = !userShowMore">
-            <img :src="icon">
+            <img :src="icon" alt="">
             <i class="el-icon-arrow-down" v-show="!userShowMore"></i>
             <i class="el-icon-arrow-up" v-show="userShowMore"></i>
           </div>
-          <div class="info-dropdown" v-show="userShowMore">
-            <div class="dropdown-content">
-              <a class="me" @click="$goto('management')">
-                <div class="user-wrapper">
-                  <p class="user-name">{{gUserInfo.userName}}</p>
-                  <p class="user-account">{{gUserInfo.userPhone}}</p>
-                </div>
-              </a>
-              <ul class="dropdown-nav">
-                <li v-for="(item, index) in $t('common.dropdownNav')" :key="index">
-                  <a @click="$goto(item.path)">{{item.title}}</a>
-                </li>
-              </ul>
-              <ul class="dropdown-nav sign-out">
-                <li><a @click="confirm('退出登录，是否确定？', logout)">{{$t('common.outLog')}}</a></li>
-              </ul>
+          <transition name="el-zoom-in-top">
+            <div class="info-dropdown" v-show="userShowMore">
+              <div class="dropdown-content">
+                <a class="me" @click="$goto('management')">
+                  <div class="user-wrapper">
+                    <p class="user-name">{{gUserInfo.userName}}</p>
+                    <p class="user-account">{{gUserInfo.userPhone}}</p>
+                    <a class="el-icon-arrow-right arrow"></a>
+                  </div>
+                </a>
+                <ul class="dropdown-nav">
+                  <li v-for="(item, index) in $t('common.dropdownNav')" :key="index">
+                    <a @click="$goto(item.path)">{{item.title}}</a>
+                  </li>
+                </ul>
+                <ul class="dropdown-nav sign-out">
+                  <li><a @click="confirm('退出登录，是否确定？', logout)">{{$t('common.outLog')}}</a></li>
+                </ul>
+              </div>
             </div>
-          </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -56,7 +59,7 @@
         <router-view></router-view>
       </div>
     </div>
-    <footer class="footer-frame clearfix"  @click="userShowMore = false">
+    <footer class="footer-frame clearfix" @click="userShowMore = false">
       <div class="bottom-layer-left">
         <p class="lh"><a href="javascript:;">{{$t('common.leftMark1')}}</a></p>
         <p class="lh"><a href="javascript:;">{{$t('common.leftMark2')}}</a></p>
@@ -110,6 +113,7 @@
         <h2 class="login_title">{{$t('common.register')}}</h2>
         <div class="login">
           <el-input
+            type="number"
             prefix-icon="el-icon-user"
             v-model="registerInfo.phoneNumber"
             @input="checkPhone"
@@ -577,8 +581,8 @@ export default {
         justify-content: flex-end;
         white-space: nowrap;
         margin-right: 50px;
-        cursor: pointer;
         .profile {
+          cursor: pointer;
           display: flex;
           align-items: center;
           img {
@@ -594,28 +598,29 @@ export default {
       }
       .info-dropdown {
         position: absolute;
-        background: black;
         width: 230px;
-        top: 60px;
+        top: 62px;
         font-size: 12px;
         .dropdown-content {
+          border-radius: 8px;
           font-size: 14px;
-          border-radius: 2px;
           background: #fff;
           .me {
+            border-radius: 8px 8px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 16px;
-            height: 64px;
+            padding: 10px 16px;
+            height: 50px;
             background-color: #5b6b73;
-            border-radius: 2px 2px 0 0;
             color: #fff;
             cursor: pointer;
             .user-wrapper {
+              position: relative;
               flex-grow: 1;
               width: 0;
               .user-name {
+                padding-top: 4px;
                 font-weight: 500;
                 line-height: 1;
                 max-width: none;
@@ -630,7 +635,19 @@ export default {
                 line-height: 1.6;
                 color: #c8cdd1;
               }
+              .arrow {
+                position: absolute;
+                display: block;
+                top: 14px;
+                right: 10px;
+                color: #8d9ea6;
+              }
             }
+          }
+          .me:hover {
+            text-decoration: none;
+            background-color: #415058;
+            opacity: 1;
           }
           .dropdown-nav {
             padding: 6px 0;
@@ -647,7 +664,7 @@ export default {
               }
               a:hover {
                 background-color: #f6f7f8;
-                color: #298df8;
+                color: #f6ab4a;
               }
             }
           }

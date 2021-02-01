@@ -15,32 +15,32 @@ const routes = [
   {
     path: '/index',
     name: 'index',
-    component: () => import('../components/views/index'),
+    component: () => import('../views/nav/index'),
   },
   {
     path: '/show',
     name: 'show',
-    component: () => import('../components/views/show'),
+    component: () => import('../views/nav/show'),
   },
   {
     path: '/about',
     name: 'about',
-    component: () => import('../components/views/about')
+    component: () => import('../views/nav/about')
   },
   {
     path: '/order',
     name: 'order',
-    component: () => import('../components/views/order')
+    component: () => import('../views/nav/order')
   },
   {
     path: '/management',
     name: 'management',
-    component: () => import('../components/profiles/management')
+    component: () => import('../views/profiles/management')
   },
   {
     path: '/changeDatum',
     name: 'changeDatum',
-    component: () => import('../components/profiles/changeDatum')
+    component: () => import('../views/profiles/changeDatum')
   }
 ]
 

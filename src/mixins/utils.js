@@ -38,10 +38,15 @@ export default {
       if (loading) {
         this.fullscreenLoading = true
       }
-      let phoneNumber = document.cookie.split('=')[1]
+      let phoneNumber = '';
+      for (let item of document.cookie.split(';')) {
+        if (item.includes('phoneNumber')) {
+          phoneNumber = item.split('=')[1]
+        }
+      }
       let params = {
         phoneNumber
-      }
+      };
       const res = await this.$http.get('profiles/changeDatum', { params })
       if (res.data.code === 200) {
         this.profiles = this.profilesFilter(res.data.profiles)
