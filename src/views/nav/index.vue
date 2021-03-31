@@ -90,19 +90,21 @@ export default {
   methods: {
     async getImages () {
       const res = await this.$http.get('product/getImas')
-      this.productData = res.data
+      const arr = [];
+      console.log(this.productData)
       if (res.status === 200) {
-        for (let item of res.data) {
+        for (let i = 0; i < 4; i ++) {
           let params = {
-            src: item.src
-          }
+            src: res.data[i].src
+          };
           let rest = await this.$http.get('product/getIma', { params })
           if (rest.data.code === 200) {
-            let imgUrl = this.bufferToUrl(rest.data.data.data)
-            item.src = imgUrl
+            const imgUrl = this.bufferToUrl(rest.data.data.data);
+            res.data[i].src = imgUrl
           }
+          arr.push(res.data[i])
         }
-      this.productData = res.data
+        this.productData = arr
       }
     },
   },

@@ -12,7 +12,7 @@ const messageCn = {
     resetPassword: '重置密码',
     freeRegister:'免费注册',
     outLog: '退出登录',
-    aniShow: '宠物展示',
+    aniShow: '宠物用品',
     aboutUs: '关于我们',
     orderCenter: '订单中心',
     sendBtn: '点击发送',

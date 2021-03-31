@@ -16,7 +16,7 @@
               <div class="content_left_box">
                 <div class="following_div_box">
                   <span class="number_inner_box">0</span>
-                  <span class="content_inner_box">我预约的</span>
+                  <span class="content_inner_box">我关注的</span>
                 </div>
               </div>
               <div class="content_right_box">

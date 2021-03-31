@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div class="header-frame clearfix">
-      <div class="nav">
+    <div class="header-frame clearfix dark-theme">
+      <div class="nav" style="visibility: hidden">
         <div class="logo">
           <a class="titleIcon" @click="$goto('/index')"/>
         </div>
@@ -492,6 +492,15 @@ export default {
     }
   },
   mounted() {
+    document.onkeydown = async event => {
+      const theEvent = event || window.event;
+      const code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+      if (code === 13) {
+        if (this.loginShow === true && this.tag === 1) {
+          await this.loginChecked()
+        }
+      }
+    };
   }
 };
 </script>
