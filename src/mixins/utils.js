@@ -47,17 +47,17 @@ export default {
       let params = {
         phoneNumber
       };
-      const res = await this.$http.get('profiles/changeDatum', { params })
+      const res = await this.$http.get('profiles/changeDatum', { params });
       if (res.data.code === 200) {
-        this.profiles = this.profilesFilter(res.data.profiles)
+        this.profiles = this.profilesFilter(res.data.profiles);
         if (loading) {
-          this.fullscreenLoading = false
+          this.fullscreenLoading = false;
           if (res.data.profiles['head_name'] !== null) {
             this.getAvatar(res.data.profiles['head_path'], res.data.profiles['head_name'])
           }
         }
       } else {
-        this.$message.error(res.data.message)
+        this.$message.error(res.data.message);
         if (loading) {
           this.fullscreenLoading = false
         }
@@ -68,7 +68,7 @@ export default {
       let params = {
         src: `${path}/${headName}`
       }
-      const res = await this.$http.get('product/getIma', { params })
+      const res = await this.$http.get('product/getIma', { params });
       if (res.data.code === 200) {
         this.gAvatar = res.data.data
       } else {

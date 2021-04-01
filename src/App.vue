@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="header-frame clearfix dark-theme">
-      <div class="nav" style="visibility: hidden">
+      <div class="nav">
         <div class="logo">
           <a class="titleIcon" @click="$goto('/index')"/>
         </div>

@@ -11,11 +11,12 @@
           <div class="images" v-for="(item1, index) in productData" :key="index">
             <div class="images_1" v-for="(item, index1) in item1" :k="index1">
               <div class="images_2">
-                <el-tooltip class="item" effect="light" content="预约" placement="top">
+                <el-tooltip class="item" effect="light" content="收藏" placement="top">
                   <img :src="item.src" alt="" @click="collect(item.id)">
                 </el-tooltip>
                 <h2>{{item.name}}</h2>
                 <p>{{item.mark}}</p>
+                <p style="font-weight: bold; color: darkred">{{'￥' + item.price}}</p>
               </div>
             </div>
           </div>
@@ -73,7 +74,7 @@ export default {
     async getImages () {
       const res = await this.$http.get('product/getImas');
       this.productDataList = res.data;
-      let arrChild = []
+      let arrChild = [];
       if (res.status === 200) {
         for (let item of res.data) {
           let params = {
@@ -85,7 +86,7 @@ export default {
           }
         }
         for (let i = 0; i < Math.ceil(res.data.length / 4); i ++) {
-          arrChild = []
+          arrChild = [];
           for (let j = 0; j < 4; j ++) {
             if (res.data[i * 4 + j] === undefined) {
               break;
