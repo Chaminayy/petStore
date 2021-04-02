@@ -93,7 +93,7 @@ export default {
         userId: window.localStorage.getItem('userPhone'),
         state: 1
       };
-      const res = await this.$http.put('profiles/subscribe', { params })
+      const res = await this.$http.put('profiles/subscribe', { params });
       if (res.data.code === 200) {
         this.$message.success(res.data.msg);
         this.resetForm('ruleForm');
